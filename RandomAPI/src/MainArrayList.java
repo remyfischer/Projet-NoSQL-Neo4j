@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 
-public class Main {
+public class MainArrayList {
 
     public enum NodeType implements Label {
 
@@ -30,8 +30,8 @@ public class Main {
 
         String query =
                 "MATCH (n )\n" +
-                "OPTIONAL MATCH (n)-[r]-()\n" +
-                "DELETE n,r";
+                        "OPTIONAL MATCH (n)-[r]-()\n" +
+                        "DELETE n,r";
 
 
         int i, j, k, finwhile, minRand, maxRand, rand;
@@ -49,36 +49,35 @@ public class Main {
 
         // FIN VARIABLE D'ENVIRONNEMENT
 
+        ArrayList<String> tabNomRandom = new ArrayList<>();
+        ArrayList<String> tabPrenomRandom = new ArrayList<>();
+        ArrayList<String> tabNom = new ArrayList<>();
+        ArrayList<String> tabPrenom = new ArrayList<>();
+        ArrayList<Integer> tabRelations = new ArrayList<>();
+        ArrayList<Integer> tabProduits = new ArrayList<>();
 
+        tabNomRandom.add("Dupont");
+        tabNomRandom.add("Durand");
+        tabNomRandom.add("Morel");
+        tabNomRandom.add("Muller");
+        tabNomRandom.add("Faure");
+        tabNomRandom.add("Guerin");
+        tabNomRandom.add("Legrand");
+        tabNomRandom.add("Lemaire");
+        tabNomRandom.add("Barbier");
+        tabNomRandom.add("Schmitt");
 
-        String[] tabNomRandom = new String[10];
-        String[] tabPrenomRandom = new String[10];
-        String[] tabNom = new String[nbPersonnes];
-        String[] tabPrenom = new String[nbPersonnes];
-        int[] tabRelations = new int[nbAmisMax];
-        int[] tabProduits = new int[nbProduitsMax];
+        tabPrenomRandom.add("Jean");
+        tabPrenomRandom.add("Clara");
+        tabPrenomRandom.add("Rémy");
+        tabPrenomRandom.add("Julie");
+        tabPrenomRandom.add("Hervé");
+        tabPrenomRandom.add("Marie");
+        tabPrenomRandom.add("Laurent");
+        tabPrenomRandom.add("Mélanie");
+        tabPrenomRandom.add("Paul");
+        tabPrenomRandom.add("Cécile");
 
-        tabNomRandom[0] = "Dupont";
-        tabNomRandom[1] = "Durand";
-        tabNomRandom[2] = "Morel";
-        tabNomRandom[3] = "Muller";
-        tabNomRandom[4] = "Faure";
-        tabNomRandom[5] = "Guerin";
-        tabNomRandom[6] = "Legrand";
-        tabNomRandom[7] = "Lemaire";
-        tabNomRandom[8] = "Barbier";
-        tabNomRandom[9] = "Schmitt";
-
-        tabPrenomRandom[0] = "Jean";
-        tabPrenomRandom[1] = "Clara";
-        tabPrenomRandom[2] = "Rémy";
-        tabPrenomRandom[3] = "Julie";
-        tabPrenomRandom[4] = "Hervé";
-        tabPrenomRandom[5] = "Marie";
-        tabPrenomRandom[6] = "Laurent";
-        tabPrenomRandom[7] = "Mélanie";
-        tabPrenomRandom[8] = "Paul";
-        tabPrenomRandom[9] = "Cécile";
 
         // Initialisation du tableau des Noms, Prénoms et Id
 
@@ -88,9 +87,9 @@ public class Main {
         for (i = 0 ; i < nbPersonnes ; i++){
 
             rand = minRand + r.nextInt(maxRand - minRand);
-            tabNom[i] = tabNomRandom[rand];
+            tabNom.add(i, tabNomRandom.get(rand));
             rand = minRand + r.nextInt(maxRand - minRand);
-            tabPrenom[i] = tabPrenomRandom[rand];
+            tabPrenom.add(i, tabPrenom.get(rand));
 
         }
 
@@ -99,18 +98,18 @@ public class Main {
 
             graphdB.execute(query);
 
-            Node[] NodePerson = new Node[nbPersonnes];
-            Node[] NodeProduct = new Node[nbProduits];
+            ArrayList<Node> NodePerson = new ArrayList<>();
+            ArrayList<Node> NodeProduct = new ArrayList<>();
 
             // Création des Nodes pour chaque Personnes
 
             for (i = 0 ; i < nbPersonnes ; i++){
 
-                NodePerson[i] = graphdB.createNode(NodeType.Person);
-                NodePerson[i].setProperty("PersonID", i);
-                NodePerson[i].setProperty("Prenom", tabPrenom[i]);
-                NodePerson[i].setProperty("Nom", tabNom[i]);
-
+                Node nodePerson = graphdB.createNode(NodeType.Person);
+                nodePerson.setProperty("PersoID", i);
+                nodePerson.setProperty("Prenom", tabPrenom.get(i));
+                nodePerson.setProperty("nom", tabNom.get(i));
+                NodePerson.add(nodePerson);
 
             }
 
@@ -122,7 +121,7 @@ public class Main {
 
                 for (j = 0; j < nbAmisMax; j++) {
 
-                    tabRelations[j] = -1;
+                    tabRelations.set(j, -1);
 
                 }
 
@@ -155,7 +154,7 @@ public class Main {
 
                         for (k = 0; k < boucle; k++) {
 
-                            if (tabRelations[k] == rand) {
+                            if(tabRelations.get(k) == rand){
 
                                 finwhile = 0;
 
@@ -163,12 +162,11 @@ public class Main {
 
                         }
 
-                        if (finwhile == 1) tabRelations[j] = rand;
+                        if (finwhile == 1) tabRelations.add(j, rand);
 
                     } while (finwhile != 1);
 
-                    NodePerson[i].createRelationshipTo(NodePerson[rand], RelationType.Knows);
-
+                    NodePerson.get(i).createRelationshipTo(NodePerson.get(rand), RelationType.Knows);
 
                 }
 
@@ -177,10 +175,11 @@ public class Main {
 
             // Création de n Produits
 
-            for (i = 0 ; i < nbProduits ; i++){
+            for (i = 0 ; i < nbProduits ; i++) {
 
-                NodeProduct[i] = graphdB.createNode(NodeType.Product);
-                NodeProduct[i].setProperty("ProductID", i);
+                Node nodeProduct = graphdB.createNode(NodeType.Product);
+                nodeProduct.setProperty("ProductID", i);
+                NodeProduct.add(nodeProduct);
 
             }
 
@@ -192,7 +191,7 @@ public class Main {
 
                 for (j = 0 ; j < nbProduitsMax ; j++){
 
-                    tabProduits[j] = -1;
+                    tabProduits.set(j, -1);
 
                 }
 
@@ -219,7 +218,7 @@ public class Main {
 
                         for (k = 0 ; k < boucle ; k++){
 
-                           if (tabProduits[k] == rand){
+                            if (tabProduits.get(k) == rand){
 
                                 finwhile = 0;
 
@@ -227,11 +226,11 @@ public class Main {
 
                         }
 
-                        if (finwhile == 1) tabRelations[j] = rand;
+                        if (finwhile == 1) tabRelations.add(j, rand);
 
                     } while (finwhile != 1);
 
-                    NodePerson[i].createRelationshipTo(NodeProduct[rand], RelationType.Buys);
+                    NodePerson.get(i).createRelationshipTo(NodeProduct.get(rand), RelationType.Buys);
 
                 }
 
