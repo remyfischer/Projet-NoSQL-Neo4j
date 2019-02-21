@@ -36,7 +36,7 @@ public class Main {
 
         // VARIABLE D'ENVIRONNEMENT
 
-        int nbPersonnes = 200000;
+        int nbPersonnes = 150000;
         int nbAmisMax = 15;
         int nbAmisMin = 7;
 
@@ -48,10 +48,10 @@ public class Main {
 
         String[] tabNomRandom = new String[10];
         String[] tabPrenomRandom = new String[10];
-        String[] tabNom = new String[1000000];
-        String[] tabPrenom = new String[1000000];
-        int[] tabRelations = new int[100];
-        int[] tabProduits = new int[5];
+        String[] tabNom = new String[nbPersonnes];
+        String[] tabPrenom = new String[nbPersonnes];
+        int[] tabRelations = new int[nbAmisMax];
+        int[] tabProduits = new int[nbProduitsMax];
 
         tabNomRandom[0] = "Dupont";
         tabNomRandom[1] = "Durand";
@@ -118,7 +118,7 @@ public class Main {
 
                 // Initialisation d'un tableau permettant d'éviter des doublons d'amitié
 
-                for (j = 0; j < 100; j++) {
+                for (j = 0; j < nbAmisMax; j++) {
 
                     tabRelations[j] = -1;
 
@@ -151,7 +151,7 @@ public class Main {
 
                         }
 
-                        for (k = 0; k < 100; k++) {
+                        for (k = 0; k < boucle; k++) {
 
                             if (tabRelations[k] == rand) {
 
@@ -188,7 +188,7 @@ public class Main {
 
                 // Initialisation d'un tableau évitant les doublons de produits
 
-                for (j = 0 ; j < 5 ; j++){
+                for (j = 0 ; j < nbProduitsMax ; j++){
 
                     tabProduits[j] = -1;
 
@@ -215,7 +215,7 @@ public class Main {
                         rand = minRand + r.nextInt(maxRand - minRand);
                         finwhile = 1;
 
-                        for (k = 0 ; k < 5 ; k++){
+                        for (k = 0 ; k < boucle ; k++){
 
                             if (tabProduits[k] == rand){
 
