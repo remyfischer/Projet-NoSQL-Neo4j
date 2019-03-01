@@ -39,13 +39,13 @@ public class MainArrayList {
 
         // VARIABLE D'ENVIRONNEMENT
 
-        int nbPersonnes = 150000;
-        int nbAmisMax = 15;
-        int nbAmisMin = 7;
+        int nbPersonnes = 500000;
+        int nbAmisMax = 20;
+        int nbAmisMin = 10;
 
-        int nbProduits = 80000;
+        int nbProduits = 500000;
         int nbProduitsMax = 5;
-        int nbProduitsMin = 1;
+        int nbProduitsMin = 0;
 
         // FIN VARIABLE D'ENVIRONNEMENT
 
@@ -53,30 +53,32 @@ public class MainArrayList {
         ArrayList<String> tabPrenomRandom = new ArrayList<>();
         ArrayList<String> tabNom = new ArrayList<>();
         ArrayList<String> tabPrenom = new ArrayList<>();
-        ArrayList<Integer> tabRelations = new ArrayList<>();
-        ArrayList<Integer> tabProduits = new ArrayList<>();
+        int[] tabRelations = new int[nbAmisMax];
+        int[] tabProduits = new int[nbProduitsMax];
+        // ArrayList<Integer> tabRelations = new ArrayList<>();
+        //ArrayList<Integer> tabProduits = new ArrayList<>();
 
-        tabNomRandom.add("Dupont");
-        tabNomRandom.add("Durand");
-        tabNomRandom.add("Morel");
-        tabNomRandom.add("Muller");
-        tabNomRandom.add("Faure");
-        tabNomRandom.add("Guerin");
-        tabNomRandom.add("Legrand");
-        tabNomRandom.add("Lemaire");
-        tabNomRandom.add("Barbier");
-        tabNomRandom.add("Schmitt");
+        tabNomRandom.add(0, "Dupont");
+        tabNomRandom.add(1, "Durand");
+        tabNomRandom.add(2, "Morel");
+        tabNomRandom.add(3,"Muller");
+        tabNomRandom.add(4, "Faure");
+        tabNomRandom.add(5, "Guerin");
+        tabNomRandom.add(6, "Legrand");
+        tabNomRandom.add(7, "Lemaire");
+        tabNomRandom.add(8, "Barbier");
+        tabNomRandom.add(9, "Schmitt");
 
-        tabPrenomRandom.add("Jean");
-        tabPrenomRandom.add("Clara");
-        tabPrenomRandom.add("Rémy");
-        tabPrenomRandom.add("Julie");
-        tabPrenomRandom.add("Hervé");
-        tabPrenomRandom.add("Marie");
-        tabPrenomRandom.add("Laurent");
-        tabPrenomRandom.add("Mélanie");
-        tabPrenomRandom.add("Paul");
-        tabPrenomRandom.add("Cécile");
+        tabPrenomRandom.add(0, "Jean");
+        tabPrenomRandom.add(1, "Clara");
+        tabPrenomRandom.add(2, "Rémy");
+        tabPrenomRandom.add(3, "Julie");
+        tabPrenomRandom.add(4, "Hervé");
+        tabPrenomRandom.add(5, "Marie");
+        tabPrenomRandom.add(6, "Laurent");
+        tabPrenomRandom.add(7, "Mélanie");
+        tabPrenomRandom.add(8, "Paul");
+        tabPrenomRandom.add(9, "Cécile");
 
 
         // Initialisation du tableau des Noms, Prénoms et Id
@@ -89,7 +91,7 @@ public class MainArrayList {
             rand = minRand + r.nextInt(maxRand - minRand);
             tabNom.add(i, tabNomRandom.get(rand));
             rand = minRand + r.nextInt(maxRand - minRand);
-            tabPrenom.add(i, tabPrenom.get(rand));
+            tabPrenom.add(i, tabPrenomRandom.get(rand));
 
         }
 
@@ -103,6 +105,8 @@ public class MainArrayList {
 
             // Création des Nodes pour chaque Personnes
 
+            System.out.println("Création personnes");
+
             for (i = 0 ; i < nbPersonnes ; i++){
 
                 Node nodePerson = graphdB.createNode(NodeType.Person);
@@ -115,13 +119,16 @@ public class MainArrayList {
 
             // Création des Relations entre chaque Personnes
 
+            System.out.println("Création relations entre les personnes");
+
             for (i = 0 ; i < nbPersonnes ; i++) {
+
 
                 // Initialisation d'un tableau permettant d'éviter des doublons d'amitié
 
                 for (j = 0; j < nbAmisMax; j++) {
 
-                    tabRelations.set(j, -1);
+                    tabRelations[j] = -1;
 
                 }
 
@@ -142,6 +149,9 @@ public class MainArrayList {
                     minRand = 0;
                     finwhile = 0;
 
+                    rand = minRand + r.nextInt(maxRand - minRand);
+
+
                     do {
 
                         rand = minRand + r.nextInt(maxRand - minRand);
@@ -154,7 +164,7 @@ public class MainArrayList {
 
                         for (k = 0; k < boucle; k++) {
 
-                            if(tabRelations.get(k) == rand){
+                            if(tabRelations[k] == rand){
 
                                 finwhile = 0;
 
@@ -162,18 +172,24 @@ public class MainArrayList {
 
                         }
 
-                        if (finwhile == 1) tabRelations.add(j, rand);
+                        if (finwhile == 1) tabRelations[j] = rand;;
 
                     } while (finwhile != 1);
 
                     NodePerson.get(i).createRelationshipTo(NodePerson.get(rand), RelationType.Knows);
+
+
 
                 }
 
 
             }
 
+            System.out.println("Relations entre les personnes crées");
+
             // Création de n Produits
+
+            System.out.println("Création produits");
 
             for (i = 0 ; i < nbProduits ; i++) {
 
@@ -185,13 +201,17 @@ public class MainArrayList {
 
             // Génération aléatoire de liens d'achats entre des personnes et des produits
 
+            System.out.println("Création relations entre les personnes et les produits");
+
             for (i = 0 ; i < nbPersonnes ; i++){
+
+
 
                 // Initialisation d'un tableau évitant les doublons de produits
 
                 for (j = 0 ; j < nbProduitsMax ; j++){
 
-                    tabProduits.set(j, -1);
+                    tabProduits[j] = -1;
 
                 }
 
@@ -218,7 +238,7 @@ public class MainArrayList {
 
                         for (k = 0 ; k < boucle ; k++){
 
-                            if (tabProduits.get(k) == rand){
+                            if (tabProduits[k] == rand){
 
                                 finwhile = 0;
 
@@ -226,7 +246,7 @@ public class MainArrayList {
 
                         }
 
-                        if (finwhile == 1) tabRelations.add(j, rand);
+                        if (finwhile == 1) tabRelations[j] = rand;
 
                     } while (finwhile != 1);
 
@@ -235,6 +255,8 @@ public class MainArrayList {
                 }
 
             }
+
+            System.out.println("Relations personnes-produits créées");
 
             tx.success();
 
